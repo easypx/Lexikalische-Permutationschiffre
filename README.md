@@ -9,7 +9,7 @@ Das System ist vergleichbar mit einem mechanischen Einmal-Wort-Chiffriergerät, 
 Moderne Sicherheitsbewertung:
 
 Angriffsmethode	Erfolgschance ohne Seed
-- Brute-Force (32-bit Seed)	- realistisch, aber mehrdeutig! (4096-bit Schluessel verwenden, Mehrdeutigkeiten steigen an)
+- Brute-Force (32-bit Seed)	- realistisch, aber mehrdeutig! (staerkeren Schluessel verwenden, Mehrdeutigkeiten steigen an)
 - Brute-Force (Passphrase)	- praktisch null
 - Häufigkeitsanalyse - ineffektiv (bei Wortersetzung)
 - Known-Plaintext-Angriff	- möglich bei sehr langem Text
