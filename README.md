@@ -1,2 +1,2 @@
-# LLexikalische-Permutationschiffre
+# Lexikalische-Permutationschiffre
 basiert auf semantischer Substitution
