@@ -4,7 +4,7 @@
 
 **🧪 3. Sicherheitsstärke im historischen Vergleich**
 
-Das System ist vergleichbar mit einem mechanischen Einmal-Wort-Chiffriergerät, wie es etwa beim diplomatischen Verkehr in der Zwischenkriegszeit eingesetzt wurde – robust, aber nur so sicher wie die Geheimhaltung der Zuordnung und des Schlüssels.
+Das System ist vergleichbar mit einem mechanischen Einmal-Wort-Chiffriergerät, wie es etwa beim diplomatischen Verkehr in der Zwischenkriegszeit eingesetzt wurde – robust, aber nur so sicher wie die Geheimhaltung der Zuordnung und des Schlüssels. Allerdings ist durch die gegebene Mehrdeutigkeit der Loesungen eine eindeutige Entschluesselung praktisch unmoeglich. 
 
 Moderne Sicherheitsbewertung:
 
