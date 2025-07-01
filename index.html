@@ -11,13 +11,15 @@
 </head>
 <body>
 
-<h2>Lexikalische Permutationschiffre (de) Beta</h2>
+<h2>Lexikalische Permutationschiffre (de)</h2>
 
 <label for="seed">Seed (Schlüssel):</label><br>
-<input type="text" id="seed" value="1234567890"><br>
+<input type="text" id="seed" value="meinGeheimerSeed"><br>
 
 <label for="klartext">Klartext (durch Leerzeichen getrennt):</label><br>
-<textarea id="klartext"></textarea><br>
+<textarea id="klartext">Hass im Netz ist eine willkuerliche Bewertung in einer Diktatur 
+Deshalb haben wir uns etwas einfallen lassen
+Worte sind willkuerliche Zeichen aber in der Ordnung in der sie gebraucht werden liegt Bedeutung</textarea><br>
 
 <button onclick="verschluesseln()">🔐 Verschlüsseln</button>
 <button onclick="entschluesseln()">🔓 Entschlüsseln</button><br>
@@ -27,7 +29,7 @@
 
 <script>
 // URL zur Wortliste
-const wortlisteUrl = "https://raw.githubusercontent.com/neunzeichen/wordlists/master/words_german_2002.txt";
+const wortlisteUrl = "https://github.com/easypx/Lexikalische-Permutationschiffre/blob/main/words_german_2002.txt";
 let wortliste = [];
 
 // Wortliste laden
@@ -77,7 +79,8 @@ function verschluesseln() {
   const perm = erzeugePermutation(seed);
 
   const verschluesselt = woerter.map(w =>
-    wortliste.includes(w) ? perm[wortliste.indexOf(w)] : `[${w}]`
+    //wortliste.includes(w) ? perm[wortliste.indexOf(w)] : `[${w}]`
+    wortliste.includes(w) ? perm[wortliste.indexOf(w)] : `${w}`
   );
   document.getElementById('ausgabe').value = verschluesselt.join(' ');
 }
@@ -90,7 +93,7 @@ function entschluesseln() {
   const perm = erzeugePermutation(seed);
 
   const entschluesselt = woerter.map(w =>
-    perm.includes(w) ? wortliste[perm.indexOf(w)] : `[${w}]`
+    perm.includes(w) ? wortliste[perm.indexOf(w)] : `${w}`
   );
   document.getElementById('ausgabe').value = entschluesselt.join(' ');
 }
