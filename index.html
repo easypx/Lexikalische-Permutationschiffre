@@ -77,7 +77,8 @@ function erzeugePermutation(seed) {
 function verschluesseln() {
   const seed = document.getElementById('seed').value;
   const text = document.getElementById('klartext').value.trim();
-  const woerter = text.split(/\s+/);
+  //const woerter = text.split(/\s+/);
+  const woerter = text.match(/\w+|[^\s\w]+/g);
   const perm = erzeugePermutation(seed);
 
   const verschluesselt = woerter.map(w =>
@@ -91,7 +92,8 @@ function verschluesseln() {
 function entschluesseln() {
   const seed = document.getElementById('seed').value;
   const text = document.getElementById('klartext').value.trim();
-  const woerter = text.split(/\s+/);
+  //const woerter = text.split(/\s+/);
+  const woerter = text.match(/\w+|[^\s\w]+/g);
   const perm = erzeugePermutation(seed);
 
   const entschluesselt = woerter.map(w =>
