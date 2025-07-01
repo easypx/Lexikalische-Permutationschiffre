@@ -26,6 +26,7 @@ Worte sind willkuerliche Zeichen aber in der Ordnung in der sie gebraucht werden
 
 <label for="ausgabe">Ausgabe:</label><br>
 <textarea id="ausgabe" readonly></textarea>
+<p id="status">Bitte warten. Lade Wortliste.</p>
 
 <script>
 // URL zur Wortliste
@@ -38,6 +39,7 @@ fetch(wortlisteUrl)
   .then(t => {
     wortliste = t.split('\n').map(w => w.trim()).filter(w => w.length > 0);
     console.log(`Wortliste geladen: ${wortliste.length} Wörter`);
+    document.getElementById('status').value = `Wortliste geladen: ${wortliste.length} Wörter`;
   });
 
 // Pseudo-Zufallszahlengenerator mit Seed (Mulberry32)
