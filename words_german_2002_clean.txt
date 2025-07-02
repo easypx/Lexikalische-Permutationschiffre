@@ -17860,6 +17860,7 @@ Erwaegungen
 Erwaehnt
 Erwaehnungen
 Erwaermung
+Erwarte
 Erwarten
 Erwartet
 Erwartung
@@ -64203,6 +64204,7 @@ Superfarmland
 Superfrachter
 Supergewinne
 Superinflation
+Superintelligenz
 Superioritaet
 Superkirche
 Superlative
@@ -115041,6 +115043,7 @@ gesuessten
 gesuesster
 gesund
 gesundbleiben
+gesunde
 gesundem
 gesunden
 gesundend
@@ -126885,6 +126888,7 @@ kuenstlerischem
 kuenstlerischer
 kuenstlerisches
 kuenstlich
+kuenstliche
 kuenstlichem
 kuenstlichen
 kuenstlicher
@@ -170570,6 +170574,7 @@ wissenschaftlich
 wissenschaftliche
 wissenschaftlichem
 wissenschaftlichen
+wissenschaftlicher
 wissenschaftlichere
 wissenschaftlicherem
 wissenschaftlicheren

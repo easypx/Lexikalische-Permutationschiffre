@@ -63,6 +63,7 @@
         wortliste = t.split('\n').map(w => w.trim()).filter(w => w.length > 0);
         console.log(`Wortliste geladen: ${wortliste.length} Wörter`);
         document.getElementById('status').innerText = `Wortliste geladen: ${wortliste.length} Wörter`;
+        document.getElementById('status').classList.remove('blink');
       });
 
     // Pseudo-Zufallszahlengenerator mit Seed (Mulberry32)
