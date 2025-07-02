@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Deutsche Wortverschlüsselung</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
   <style>
     body {
       font-family: sans-serif;
@@ -29,13 +31,39 @@
         opacity: 0;
       }
     }
+
+    footer {
+      text-align: center;
+      /* zentriert */
+      font-size: 0.8em;
+      /* etwas kleiner */
+      color: #666;
+      /* dezentes Grau */
+      margin-top: 2em;
+      /* Abstand nach oben */
+      padding: 1em;
+      /* etwas Luft */
+    }
+
+    footer a {
+      color: #666;
+      /* Link auch dezent */
+      text-decoration: none;
+      /* optional: Unterstreichung weg */
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+      /* beim Überfahren sichtbar */
+    }
   </style>
 </head>
 
 <body>
 
   <h2>Lexikalische Permutationschiffre (de)</h2>
-  <p>Bitte keine Umlaute verwenden, stattdessen ue, oe, ae. Nur fuer wissenschaftliche Demonstrationszwecke! Missbrauch wird geahndet! 😊
+  <p>Bitte keine Umlaute verwenden, stattdessen ue, oe, ae. Nur fuer wissenschaftliche Demonstrationszwecke! Missbrauch
+    wird geahndet! 😊
   </p>
   <label for="seed">Seed (Schlüssel):</label><br>
   <input type="text" id="seed" value="JudgementDay"><br>
@@ -50,15 +78,21 @@
   <label for="ausgabe">Ausgabe:</label><br>
   <textarea id="ausgabe" readonly></textarea>
   <p id="status" class="blink">Bitte warten. Lade Wortliste.</p>
+  <footer>
+    <small>Verbesserungsvorschläge an <a href="mailto:deine@email.de">deine@email.de</a></small>
+  </footer>
 
   <script>
     // URL zur Wortliste
-    const wortlisteUrl = "words_german_2002_clean.txt";
+    const wortlisteUrl = "words_german_2002_clean.zip";
     let wortliste = [];
 
     // Wortliste laden
+    // TODO Zip laden
     fetch(wortlisteUrl)
-      .then(r => r.text())
+      .then(r => r.arrayBuffer())                        // ZIP als ArrayBuffer laden
+      .then(data => JSZip.loadAsync(data))               // ZIP entpacken
+      .then(zip => zip.file('words_german_2002_clean.txt').async('string'))  // Datei im ZIP lesen
       .then(t => {
         wortliste = t.split('\n').map(w => w.trim()).filter(w => w.length > 0);
         console.log(`Wortliste geladen: ${wortliste.length} Wörter`);
