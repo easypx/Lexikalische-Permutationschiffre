@@ -2,164 +2,200 @@
 <html lang="de">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Deutsche Wortverschlüsselung</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Deutsche Wortverschlüsselung</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function () {
+            emailjs.init('ArirktYh7A_6X6tKg'); // Dein Public Key
+        })();
+    </script>
 
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 2em;
-    }
 
-    textarea {
-      width: 100%;
-      height: 100px;
-    }
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+        }
 
-    input,
-    button {
-      margin: 0.5em 0;
-    }
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
 
-    .blink {
-      animation: blinker 1.5s linear infinite;
-    }
+        input,
+        button {
+            margin: 0.5em 0;
+        }
 
-    @keyframes blinker {
-      50% {
-        opacity: 0;
-      }
-    }
+        .blink {
+            animation: blinker 1.5s linear infinite;
+        }
 
-    footer {
-      text-align: center;
-      /* zentriert */
-      font-size: 0.8em;
-      /* etwas kleiner */
-      color: #666;
-      /* dezentes Grau */
-      margin-top: 2em;
-      /* Abstand nach oben */
-      padding: 1em;
-      /* etwas Luft */
-    }
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
 
-    footer a {
-      color: #666;
-      /* Link auch dezent */
-      text-decoration: none;
-      /* optional: Unterstreichung weg */
-    }
+        footer {
+            text-align: center;
+            /* zentriert */
+            font-size: 0.8em;
+            /* etwas kleiner */
+            color: #666;
+            /* dezentes Grau */
+            margin-top: 2em;
+            /* Abstand nach oben */
+            padding: 1em;
+            /* etwas Luft */
+        }
 
-    footer a:hover {
-      text-decoration: underline;
-      /* beim Überfahren sichtbar */
-    }
-  </style>
+        footer a {
+            color: #666;
+            /* Link auch dezent */
+            text-decoration: none;
+            /* optional: Unterstreichung weg */
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+            /* beim Überfahren sichtbar */
+        }
+    </style>
 </head>
 
 <body>
 
-  <h2>Lexikalische Permutationschiffre (de)</h2>
-  <p>Bitte keine Umlaute verwenden, stattdessen ue, oe, ae. Nur fuer wissenschaftliche Demonstrationszwecke! Missbrauch
-    wird geahndet! 😊
-  </p>
-  <label for="seed">Seed (Schlüssel):</label><br>
-  <input type="text" id="seed" value="JudgementDay"><br>
+    <h2>Lexikalische Permutationschiffre (de)</h2>
+    <p>Bitte keine Umlaute verwenden, stattdessen ue, oe, ae. Nur fuer wissenschaftliche Demonstrationszwecke!
+        Missbrauch
+        wird geahndet! 😊
+    </p>
+    <label for="seed">Seed (Schlüssel):</label><br>
+    <input type="text" id="seed" value="JudgementDay"><br>
 
-  <label for="klartext">Klartext (durch Leerzeichen getrennt):</label><br>
-  <textarea
-    id="klartext">Hass im Netz ist eine willkuerliche Bewertung in einer Diktatur. Deshalb haben wir uns etwas einfallen lassen. Worte sind willkuerliche Zeichen aber in der Ordnung in der sie gebraucht werden liegt Bedeutung.</textarea><br>
+    <label for="klartext">Klartext (durch Leerzeichen getrennt):</label><br>
+    <textarea
+        id="klartext">Hass im Netz ist eine willkuerliche Bewertung in einer Diktatur. Deshalb haben wir uns etwas einfallen lassen. Worte sind willkuerliche Zeichen aber in der Ordnung in der sie gebraucht werden liegt Bedeutung.</textarea><br>
 
-  <button onclick="verschluesseln()">🔐 Verschlüsseln</button>
-  <button onclick="entschluesseln()">🔓 Entschlüsseln</button><br>
+    <button onclick="verschluesseln()">🔐 Verschlüsseln</button>
+    <button onclick="entschluesseln()">🔓 Entschlüsseln</button><br>
 
-  <label for="ausgabe">Ausgabe:</label><br>
-  <textarea id="ausgabe" readonly></textarea>
-  <p id="status" class="blink">Bitte warten. Lade Wortliste.</p>
-  <footer>
-    <small>Verbesserungsvorschläge an <a href="mailto:klang.raum@gmx.net">klang.raum@gmx.net ❤️</a></small>
-  </footer>
+    <label for="ausgabe">Ausgabe:</label><br>
+    <textarea id="ausgabe" readonly></textarea>
+    <textarea id="unbekannt" rows="4" cols="50" readonly placeholder="Unbekannte Wörter erscheinen hier..."></textarea>
 
-  <script>
-    // URL zur Wortliste
-    const wortlisteUrl = "words_german_2002_clean.zip";
-    let wortliste = [];
+    <p id="status" class="blink">Bitte warten. Lade Wortliste.</p>
+    <footer>
+        <small>Verbesserungsvorschläge an <a href="mailto:klang.raum@gmx.net">klang.raum@gmx.net ❤️</a></small>
+    </footer>
 
-    // Wortliste laden
-    // TODO Zip laden
-    fetch(wortlisteUrl)
-      .then(r => r.arrayBuffer())                        // ZIP als ArrayBuffer laden
-      .then(data => JSZip.loadAsync(data))               // ZIP entpacken
-      .then(zip => zip.file('words_german_2002_clean.txt').async('string'))  // Datei im ZIP lesen
-      .then(t => {
-        wortliste = t.split('\n').map(w => w.trim()).filter(w => w.length > 0);
-        console.log(`Wortliste geladen: ${wortliste.length} Wörter`);
-        document.getElementById('status').innerText = `Wortliste geladen: ${wortliste.length} Wörter`;
-        document.getElementById('status').classList.remove('blink');
-      });
+    <script>
+        // URL zur Wortliste
+        const wortlisteUrl = "words_german_2002_clean.zip";
+        let wortliste = [];
 
-    // Pseudo-Zufallszahlengenerator mit Seed (Mulberry32)
-    function mulberry32(a) {
-      return function () {
-        a |= 0; a = a + 0x6D2B79F5 | 0;
-        let t = Math.imul(a ^ a >>> 15, 1 | a);
-        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-      }
-    }
+        // Wortliste laden
+        // TODO Zip laden
+        fetch(wortlisteUrl)
+            .then(r => r.arrayBuffer())                        // ZIP als ArrayBuffer laden
+            .then(data => JSZip.loadAsync(data))               // ZIP entpacken
+            .then(zip => zip.file('words_german_2002_clean.txt').async('string'))  // Datei im ZIP lesen
+            .then(t => {
+                wortliste = t.split('\n').map(w => w.trim()).filter(w => w.length > 0);
+                console.log(`Wortliste geladen: ${wortliste.length} Wörter`);
+                document.getElementById('status').innerText = `Wortliste geladen: ${wortliste.length} Wörter`;
+                document.getElementById('status').classList.remove('blink');
+            });
 
-    // String zu Zahl (Seed → Zahl)
-    function seedToNumber(seed) {
-      let h = 2166136261 >>> 0;
-      for (let i = 0; i < seed.length; i++) {
-        h ^= seed.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      return h >>> 0;
-    }
+        // Pseudo-Zufallszahlengenerator mit Seed (Mulberry32)
+        function mulberry32(a) {
+            return function () {
+                a |= 0; a = a + 0x6D2B79F5 | 0;
+                let t = Math.imul(a ^ a >>> 15, 1 | a);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            }
+        }
 
-    // Permutation erstellen
-    function erzeugePermutation(seed) {
-      const rng = mulberry32(seedToNumber(seed));
-      const perm = wortliste.slice();
-      for (let i = perm.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        [perm[i], perm[j]] = [perm[j], perm[i]];
-      }
-      return perm;
-    }
+        // String zu Zahl (Seed → Zahl)
+        function seedToNumber(seed) {
+            let h = 2166136261 >>> 0;
+            for (let i = 0; i < seed.length; i++) {
+                h ^= seed.charCodeAt(i);
+                h = Math.imul(h, 16777619);
+            }
+            return h >>> 0;
+        }
 
-    // Verschlüsselung
-    function verschluesseln() {
-      const seed = document.getElementById('seed').value;
-      const text = document.getElementById('klartext').value.trim();
-      //const woerter = text.split(/\s+/);
-      const woerter = text.match(/\w+|[^\s\w]+/g);
-      const perm = erzeugePermutation(seed);
+        // Permutation erstellen
+        function erzeugePermutation(seed) {
+            const rng = mulberry32(seedToNumber(seed));
+            const perm = wortliste.slice();
+            for (let i = perm.length - 1; i > 0; i--) {
+                const j = Math.floor(rng() * (i + 1));
+                [perm[i], perm[j]] = [perm[j], perm[i]];
+            }
+            return perm;
+        }
 
-      const verschluesselt = woerter.map(w =>
-        //wortliste.includes(w) ? perm[wortliste.indexOf(w)] : `[${w}]`
-        wortliste.includes(w) ? perm[wortliste.indexOf(w)] : `${w}`
-      );
-      document.getElementById('ausgabe').value = verschluesselt.join(' ');
-    }
+        function verschluesseln() {
+            const seed = document.getElementById('seed').value;
+            const text = document.getElementById('klartext').value.trim();
+            const woerter = text.match(/\w+|[^\s\w]+/g);
+            const perm = erzeugePermutation(seed);
+            let unknownWords = [];
 
-    // Entschlüsselung
-    function entschluesseln() {
-      const seed = document.getElementById('seed').value;
-      const text = document.getElementById('klartext').value.trim();
-      //const woerter = text.split(/\s+/);
-      const woerter = text.match(/\w+|[^\s\w]+/g);
-      const perm = erzeugePermutation(seed);
+            const verschluesselt = woerter.map(w => {
+                if (wortliste.includes(w)) {
+                    return perm[wortliste.indexOf(w)];
+                } else {
+                    unknownWords.push(w);
+                    return w; // oder `[${w}]` wenn du sie markieren willst
+                }
+            });
 
-      const entschluesselt = woerter.map(w =>
-        perm.includes(w) ? wortliste[perm.indexOf(w)] : `${w}`
-      );
-      document.getElementById('ausgabe').value = entschluesselt.join(' ');
-    }
-  </script>
+            document.getElementById('ausgabe').value = verschluesselt.join(' ');
+
+            // Zum Debuggen oder Anzeigen:
+            console.log("Unbekannte Wörter:", unknownWords);
+            document.getElementById('unbekannt').value = unknownWords.join(' ');
+
+            // unbekannte Woerter per Email versenden
+            /*if (unknownWords.length > 0) {
+                sendUnknownWords(unknownWords);
+            }*/
+
+        }
+
+        // Entschlüsselung
+        function entschluesseln() {
+            const seed = document.getElementById('seed').value;
+            const text = document.getElementById('klartext').value.trim();
+            const woerter = text.match(/\w+|[^\s\w]+/g);
+            const perm = erzeugePermutation(seed);
+
+            const entschluesselt = woerter.map(w =>
+                perm.includes(w) ? wortliste[perm.indexOf(w)] : `${w}`
+            );
+            document.getElementById('ausgabe').value = entschluesselt.join(' ');
+        }
+
+        // Email mit unbekannten Woertern senden
+        function sendUnknownWords(unknownWords) {
+            emailjs.send('service_4jc8euc', 'template_nvn8qj6', {
+                unknown_words: unknownWords.join(', ')
+            })
+                .then(function (response) {
+                    console.log('E-Mail erfolgreich gesendet!', response.status, response.text);
+                }, function (error) {
+                    console.error('FEHLER beim Senden der E-Mail.', error);
+                });
+        }
+
+    </script>
 
 </body>
 
